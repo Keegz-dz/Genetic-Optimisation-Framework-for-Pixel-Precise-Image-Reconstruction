@@ -1,6 +1,4 @@
 """
-inference.py
-
 This is the main entry point for the Genetic Optimization for Pixel-Precise Image Reconstruction project.
 It loads image parameters from Modules/image_parameters.py, runs the genetic algorithm from model/genetic_model.py,
 saves the final image in the output folder (data/processed), and displays the final generated image.
