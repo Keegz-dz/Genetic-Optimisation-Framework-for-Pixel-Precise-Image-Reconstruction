@@ -1,10 +1,10 @@
 # Genetic Optimization Framework for Pixel-Precise Image Reconstruction
 
-The **Genetic Optimization Framework for Pixel-Precise Image Reconstruction** is a custom implementation of a standard genetic algorithm tailored for the task of image reconstruction. Building upon classical genetic algorithm principles, this project integrates several improvements to efficiently evolve candidate solutions for reconstructing images at the pixel level. Our implementation includes enhancements such as checkpointing, streamlined mutation operations, and a responsive Streamlit UI for real-time visualization of the reconstruction process.
+The **Genetic Optimization Framework for Pixel-Precise Image Reconstruction** is a custom implementation of a genetic algorithm designed specifically for image reconstruction. Although based on standard genetic algorithm techniques, this framework adapts and refines conventional methods to efficiently evolve candidate solutions, achieving pixel-level reconstruction accuracy.
 
 ![Project Overview](assets/project-overview.png)
 
-This repository contains all the necessary scripts along with a Docker-based setup for easy installation and deployment.
+This repository contains all the scripts required for running inference through a Streamlit-based UI and includes a Docker setup for simplified deployment.
 
 ![Final Result](assets/Result.png)
 
@@ -18,12 +18,14 @@ For running inference using the Streamlit UI, the following data files and direc
 
 ## Features
 
-- **Custom Genetic Algorithm Implementation:**
-  - **Population Initialization:** Generates a set of candidate solutions from the input image.
-  - **Fitness Evaluation:** Uses the sum of absolute pixel differences to evaluate how close a candidate image is to the target.
-  - **Selection, Crossover, and Mutation:** Implements standard genetic operations with custom enhancements tailored for image data.
-  - **Checkpointing:** Saves intermediate checkpoint images at specified intervals for progress tracking.
-  - **Final Output Saving:** The best candidate (final reconstruction) is saved as `solution.png`.
+- **Customized Genetic Operations:**  
+  Tailored population initialization, selection, and multi-point crossover methods optimized for handling complex, high-dimensional image data, ensuring efficient exploration of the solution space.
+
+- **Enhanced Mutation Strategies:**  
+  Implementation of non-uniform mutation and simulated brush-stroke effects introduces controlled variability, helping fine-tune candidate solutions to achieve higher reconstruction fidelity.
+
+- **Modular and Lightweight Architecture:**  
+  The framework is designed with modular components for each genetic operation and image processing step, facilitating easy customization and extension for future experimentation.
 
 - **Interactive Reconstruction Inference:**
   - **Streamlit-Based UI:** An interactive interface for uploading an image and visualizing the reconstruction process.
@@ -51,7 +53,7 @@ For running inference using the Streamlit UI, the following data files and direc
 
 1. **Upload an Image:**
    - Navigate to the Streamlit UI in your browser (e.g., `http://localhost:8501`).
-   - Upload a low-resolution image from the `data/raw` folder.
+   - Upload a low-resolution image.
 
 2. **Run Reconstruction:**
    - Click the **"Reconstruct"** button to start the genetic algorithm.
