@@ -75,4 +75,8 @@ def genetic_algorithm(parameters_list, folderPath, generations=100000, save_poin
     
     # Save the final image as solution.png in the output folder.
     final_file = os.path.join(folderPath, "solution.png")
-    saving.save_images(generations - 1, fit_quality, new_population, img_shape, save_point, folderPath, filename=final_file)
+    # Always save (create or overwrite) the final image.
+    saving.save_images(
+        generations - 1, fit_quality, new_population, img_shape, 
+        save_point, folderPath, filename=final_file
+    )

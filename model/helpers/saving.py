@@ -43,12 +43,9 @@ def save_images(curr_iteration, qualities, new_population, im_shape, save_point,
         None
     """
     if np.mod(curr_iteration, save_point) == 0:
-        # Select the best candidate based on fitness.
         best_solution_chrom = new_population[np.where(qualities == np.max(qualities))[0][0], :]
         best_solution_img = chromosome2img(best_solution_chrom, im_shape)
-        
-        # Determine the filename.
         if filename is None:
             filename = os.path.join(save_dir, "solution.png")
-        # Save the image.
+       
         plt.imsave(filename, best_solution_img)

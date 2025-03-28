@@ -54,13 +54,13 @@ def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", d
     genetic_model.genetic_algorithm(parameters_list, output_folder)
     # Define the final image path.
     final_image_path = os.path.join(output_folder, "solution.png")
-    # Display the final image if requested.
+    # Display the final image.
     if display:
         display_image(final_image_path)
 
 if __name__ == "__main__":
     inference(
-        image_path="data/raw/fruit.jpg",
+        image_path="data/raw/test.jpg",
         output_folder="data/processed",
         display=True
     )
