@@ -58,15 +58,16 @@ def genetic_algorithm(parameters_list, folderPath, generations=300000, save_poin
     if not os.path.exists(checkpoint_folder):
         os.makedirs(checkpoint_folder)
 
-    # Main loop with progress bar.
     for generation in tqdm(range(generations), desc="Running Genetic Algorithm"):
+        
         # Evaluate fitness for each individual.
         fit_quality = fitness.calc_population_fitness(target_chromosome, new_population)
+        
         # Select top individuals as parents.
         parents = selection.selecting_mating_pool(num_parents_mating, new_population, fit_quality)
+        
         # Generate offspring via multi-point crossover.
         new_population = crossover.multi_pt_crossover(parents, img_shape, sol_per_population)
-        # Apply enhanced mutation.
         new_population = mutation.enhanced_mutation(new_population, num_parents_mating, mutation_percent)
 
         # Save checkpoint images at regular intervals (except generation 0).
@@ -76,9 +77,7 @@ def genetic_algorithm(parameters_list, folderPath, generations=300000, save_poin
     
     # Save the final image as solution.png in the output folder.
     final_file = os.path.join(folderPath, "solution.png")
-    # Save final image unconditionally, regardless of modulo condition.
     best_solution_chrom = new_population[np.where(fit_quality == np.max(fit_quality))[0][0], :]
     best_solution_img = saving.chromosome2img(best_solution_chrom, img_shape)
-    # Overwrite or create the file.
-    from matplotlib import pyplot as plt  # Import here for final save
+    from matplotlib import pyplot as plt  
     plt.imsave(final_file, best_solution_img)
