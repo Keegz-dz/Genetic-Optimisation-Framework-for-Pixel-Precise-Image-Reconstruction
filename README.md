@@ -85,7 +85,7 @@ For running inference using the Streamlit UI, the following data files and direc
 
 This project builds upon the classical genetic algorithm framework, which has been widely studied and implemented. Our custom modifications for image reconstruction are an original extension of standard techniques, aiming to deliver pixel-precise results. While the genetic algorithm concept is well-established, our specific approach for image reconstruction and the enhancements implemented in this project are released under the MIT License.
 
-This project also builds upon ideas and inspiration from the work by Ahmed Fawzy Mohamed Gad for image reconstruction using a basic genetic algorithm, which is available under the MIT License. The original repository can be found on GitHub. Portions of this code were adapted from that implementation.
+This project also builds upon ideas and inspiration from the work by Ahmed Gad for image reconstruction using a basic genetic algorithm, which is available under the MIT License. The original repository can be found on GitHub. Portions of this code were adapted from that implementation.
 
 ```
 MIT License
