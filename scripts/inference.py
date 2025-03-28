@@ -76,7 +76,7 @@ def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", d
 
 if __name__ == "__main__":
     inference(
-        image_path="data/raw/test_2.png",
+        image_path="data/raw/test.png",
         output_folder="data/processed",
         display=True
     )
