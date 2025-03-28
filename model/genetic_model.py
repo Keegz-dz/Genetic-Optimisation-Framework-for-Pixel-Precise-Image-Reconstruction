@@ -17,7 +17,7 @@ if project_root not in sys.path:
 from modules import population, fitness, selection, crossover, mutation  # noqa: E402
 from model.helpers import saving  # noqa: E402
 
-def genetic_algorithm(parameters_list, folderPath, generations=100000, save_point=5000):
+def genetic_algorithm(parameters_list, folderPath, generations=40000, save_point=20000):
     """
     Run the genetic algorithm to regenerate an image based on the target parameters.
 
@@ -74,7 +74,7 @@ def genetic_algorithm(parameters_list, folderPath, generations=100000, save_poin
             saving.save_images(generation, fit_quality, new_population, img_shape, save_point, checkpoint_folder, filename=checkpoint_file)
     
     # Save the final image as solution.png in the output folder.
-    final_file = os.path.join(folderPath, "solution.png")
+    final_file = None
     # Always save (create or overwrite) the final image.
     saving.save_images(
         generations - 1, fit_quality, new_population, img_shape, 

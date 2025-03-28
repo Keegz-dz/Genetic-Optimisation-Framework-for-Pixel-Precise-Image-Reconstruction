@@ -17,23 +17,37 @@ if project_root not in sys.path:
 
 import image_parameters  # noqa: E402
 from model import genetic_model  # noqa: E402
-
-def display_image(image_path):
+    
+    
+def display_side_by_side(original_path, final_path):
     """
-    Display the image located at the given path using matplotlib.
+    Display the original input image (resized to 150x150) alongside the final generated image.
     
     Parameters:
-        image_path (str): Path to the image file.
+        original_path (str): Path to the original input image.
+        final_path (str): Path to the final generated image.
     
     Returns:
         None
     """
-    img = Image.open(image_path)
-    plt.figure(figsize=(8, 6))
-    plt.imshow(img)
-    plt.axis("off")
-    plt.title("Final Generated Image")
+    # Load and resize the original image to 150x150.
+    original_img = Image.open(original_path)
+    original_img_resized = original_img.resize((150, 150))
+    
+    # Load the final generated image.
+    final_img = Image.open(final_path)
+    
+    # Create a side-by-side comparison plot.
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+    axes[0].imshow(original_img_resized)
+    axes[0].set_title("Original (150x150)")
+    
+    axes[1].imshow(final_img)
+    axes[1].set_title("Final Generated Image")
+    
+    plt.tight_layout()
     plt.show()
+
 
 def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", display=True):
     """
@@ -54,13 +68,15 @@ def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", d
     genetic_model.genetic_algorithm(parameters_list, output_folder)
     # Define the final image path.
     final_image_path = os.path.join(output_folder, "solution.png")
-    # Display the final image.
-    if display:
-        display_image(final_image_path)
+
+    
+    # Todo : Fix the display and file reading issue
+    # if display:
+    #     display_side_by_side(image_path, final_image_path)
 
 if __name__ == "__main__":
     inference(
-        image_path="data/raw/test.jpg",
+        image_path="data/raw/test_2.png",
         output_folder="data/processed",
         display=True
     )

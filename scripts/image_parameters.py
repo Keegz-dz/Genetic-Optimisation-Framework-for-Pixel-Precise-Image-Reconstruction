@@ -3,6 +3,7 @@ This module is responsible for processing an input image file and extracting key
 required for the genetic algorithm. It reads the image, converts it into a NumPy array, and
 generates essential data including the original image (as a PIL Image), the array representation,
 the shape of the image, and the flattened array (chromosome) that represents the image.
+It also resizes every input image to 300x300 pixels to speed up the genetic algorithm.
 """
 
 import numpy as np
@@ -11,7 +12,7 @@ from PIL import Image
 
 def Main(image_path):
     """
-    Reads an image from the specified file path and extracts parameters needed for processing.
+    Read the image from the provided path, resize it to 100x100 pixels, and extract image parameters.
 
     Parameters:
         image_path (str): The file path to the target image.
@@ -24,7 +25,8 @@ def Main(image_path):
             - target_chromosome (np.array): A flattened version of the image array.
     """
     target_img = Image.open(image_path)
-    
+    target_img = target_img.resize((150, 150))
+    target_img = target_img.convert("RGB")      # Ensure the image is in RGB format
     target_arr = np.array(target_img)           # Convert the image to a NumPy array
     img_shape = target_arr.shape                # (height, width, channels)
     target_chromosome = target_arr.flatten()    # Flatten the image array to create a 1D "chromosome" representation
