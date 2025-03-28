@@ -8,6 +8,7 @@ import os
 import sys
 import matplotlib.pyplot as plt
 from PIL import Image
+import shutil
 
 # Adjust sys.path so that the project root is included.
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,8 +18,15 @@ if project_root not in sys.path:
 
 import image_parameters  # noqa: E402
 from model import genetic_model  # noqa: E402
-    
-    
+
+def clear_checkpoint_directory(checkpoint_dir):
+    """
+    Remove all files from the checkpoint directory.
+    """
+    if os.path.exists(checkpoint_dir):
+        shutil.rmtree(checkpoint_dir)
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
 def display_side_by_side(original_path, final_path):
     """
     Display the original input image (resized to 150x150) alongside the final generated image.
@@ -41,13 +49,14 @@ def display_side_by_side(original_path, final_path):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
     axes[0].imshow(original_img_resized)
     axes[0].set_title("Original (150x150)")
+    axes[0].axis("off")
     
     axes[1].imshow(final_img)
     axes[1].set_title("Final Generated Image")
+    axes[1].axis("off")
     
     plt.tight_layout()
     plt.show()
-
 
 def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", display=True):
     """
@@ -62,17 +71,23 @@ def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", d
     Returns:
         None
     """
-    # Load image parameters (target image, array representation, image shape, flattened chromosome).
+    # Clear previous checkpoints.
+    checkpoint_dir = os.path.join(output_folder, "checkpoint")
+    if os.path.exists(checkpoint_dir):
+        clear_checkpoint_directory(checkpoint_dir)
+    else:
+        os.makedirs(checkpoint_dir, exist_ok=True)
+    
+    # Load image parameters.
     parameters_list = image_parameters.Main(image_path)
     # Run the genetic algorithm.
     genetic_model.genetic_algorithm(parameters_list, output_folder)
     # Define the final image path.
     final_image_path = os.path.join(output_folder, "solution.png")
-
     
-    # Todo : Fix the display and file reading issue
-    # if display:
-    #     display_side_by_side(image_path, final_image_path)
+    # Display final image.
+    if display:
+        display_side_by_side(image_path, final_image_path)
 
 if __name__ == "__main__":
     inference(

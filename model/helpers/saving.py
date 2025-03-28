@@ -9,18 +9,18 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-def chromosome2img(chromosome, img_shape):
+def chromosome2img(chromosome, im_shape):
     """
     Convert a 1D chromosome (flattened image) back to its original image shape.
     
     Parameters:
         chromosome (np.array): Flattened image array.
-        img_shape (tuple): Original dimensions of the image.
+        im_shape (tuple): Original dimensions of the image.
     
     Returns:
         np.array: Reshaped image array.
     """
-    return np.reshape(chromosome, img_shape)
+    return np.reshape(chromosome, im_shape)
 
 def save_images(curr_iteration, qualities, new_population, im_shape, save_point, save_dir, filename=None):
     """
@@ -47,5 +47,4 @@ def save_images(curr_iteration, qualities, new_population, im_shape, save_point,
         best_solution_img = chromosome2img(best_solution_chrom, im_shape)
         if filename is None:
             filename = os.path.join(save_dir, "solution.png")
-       
         plt.imsave(filename, best_solution_img)

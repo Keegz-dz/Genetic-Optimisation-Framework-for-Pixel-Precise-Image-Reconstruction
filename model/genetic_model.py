@@ -7,6 +7,7 @@ and saving of checkpoint images as well as the final best performing image.
 import sys
 import os
 from tqdm import tqdm
+import numpy as np
 
 # Adjust sys.path so that the project root is included.
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +18,7 @@ if project_root not in sys.path:
 from modules import population, fitness, selection, crossover, mutation  # noqa: E402
 from model.helpers import saving  # noqa: E402
 
-def genetic_algorithm(parameters_list, folderPath, generations=40000, save_point=20000):
+def genetic_algorithm(parameters_list, folderPath, generations=300000, save_point=20000):
     """
     Run the genetic algorithm to regenerate an image based on the target parameters.
 
@@ -68,15 +69,16 @@ def genetic_algorithm(parameters_list, folderPath, generations=40000, save_point
         # Apply enhanced mutation.
         new_population = mutation.enhanced_mutation(new_population, num_parents_mating, mutation_percent)
 
-        # Save checkpoint images at regular intervals (except at generation 0).
+        # Save checkpoint images at regular intervals (except generation 0).
         if generation % save_point == 0 and generation != 0:
             checkpoint_file = os.path.join(checkpoint_folder, f"checkpoint_{generation}.png")
             saving.save_images(generation, fit_quality, new_population, img_shape, save_point, checkpoint_folder, filename=checkpoint_file)
     
     # Save the final image as solution.png in the output folder.
-    final_file = None
-    # Always save (create or overwrite) the final image.
-    saving.save_images(
-        generations - 1, fit_quality, new_population, img_shape, 
-        save_point, folderPath, filename=final_file
-    )
+    final_file = os.path.join(folderPath, "solution.png")
+    # Save final image unconditionally, regardless of modulo condition.
+    best_solution_chrom = new_population[np.where(fit_quality == np.max(fit_quality))[0][0], :]
+    best_solution_img = saving.chromosome2img(best_solution_chrom, img_shape)
+    # Overwrite or create the file.
+    from matplotlib import pyplot as plt  # Import here for final save
+    plt.imsave(final_file, best_solution_img)

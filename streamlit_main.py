@@ -1,18 +1,20 @@
 import streamlit as st
-import cv2
-import numpy as np
-import tempfile
-import os
-import threading
-import time
-from PIL import Image
+st.set_page_config(page_title="Genetic Image Reconstruction", layout="wide")
+
+import cv2              # noqa: E402
+import numpy as np      # noqa: E402
+import tempfile         # noqa: E402
+import os               # noqa: E402
+import threading        # noqa: E402
+import time             # noqa: E402
+from PIL import Image   # noqa: E402
+import shutil           # noqa: E402 
 
 # Import the necessary modules from your project.
-from .modules import image_parameters
-from model import genetic_model
+from scripts import image_parameters  # noqa: E402
+from model import genetic_model       # noqa: E402
 
-# Set page configuration and custom CSS.
-st.set_page_config(page_title="Genetic Image Reconstruction", layout="wide")
+# --- Inject Custom CSS ---
 st.markdown(
     """
     <style>
@@ -46,9 +48,9 @@ st.sidebar.info(
     """
     **Steps:**
     1. Upload a low-resolution image.
-    2. Click "Enhance Image" to start the genetic algorithm.
-    3. Watch as checkpoint images are generated and displayed.
-    4. Once finished, the final image is shown.
+    2. Click "Reconstruct" to start the genetic algorithm.
+    3. Watch as checkpoint images from this run are generated and displayed.
+    4. Once finished, the final image is shown along with a gallery of checkpoints.
     """
 )
 
@@ -56,7 +58,7 @@ st.sidebar.info(
 
 def resize_for_display(image, max_width=500):
     """
-    Resize an image (in BGR or RGB format) for display if its width exceeds max_width.
+    Resize an image (BGR or RGB) for display if its width exceeds max_width.
     """
     height, width = image.shape[:2]
     if width > max_width:
@@ -74,31 +76,29 @@ def load_checkpoint_images(checkpoint_dir):
     if not os.path.exists(checkpoint_dir):
         return []
     files = [f for f in os.listdir(checkpoint_dir) if f.startswith("checkpoint_") and f.endswith(".png")]
-    # Sort files by the integer in the filename.
     files.sort(key=lambda x: int(x.replace("checkpoint_", "").replace(".png", "")))
     full_paths = [os.path.join(checkpoint_dir, f) for f in files]
     return full_paths
-
-def display_checkpoint(image_path):
-    """
-    Display a checkpoint image using Streamlit.
-    """
-    img = Image.open(image_path)
-    st.image(img, use_column_width=True)
 
 def run_genetic_algorithm(input_path, output_folder):
     """
     Run the genetic algorithm inference.
     This function is designed to run in a separate thread.
     """
-    # Load image parameters from the uploaded image.
     parameters_list = image_parameters.Main(input_path)
-    # Run the genetic algorithm; this function will save checkpoint images and final image.
     genetic_model.genetic_algorithm(parameters_list, output_folder)
 
-# --- Main App Logic ---
+def clear_checkpoint_directory(checkpoint_dir):
+    """
+    Remove all files from the checkpoint directory.
+    """
+    if os.path.exists(checkpoint_dir):
+        shutil.rmtree(checkpoint_dir)
+    os.makedirs(checkpoint_dir, exist_ok=True)
 
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+# --- Main App Content ---
+
+uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"], key="image_upload")
 
 if uploaded_file is not None:
     # Save the uploaded file to a temporary file.
@@ -106,64 +106,69 @@ if uploaded_file is not None:
     tfile.write(uploaded_file.read())
     tfile.close()
     
-    # Read image using OpenCV.
+    # Read the image using OpenCV.
     image = cv2.imread(tfile.name)
     
     if image is None:
         st.error("Error loading the image. Please try another file.")
     else:
-        # Resize image for preview.
         image_for_display = resize_for_display(image)
-        
         with st.expander("Preview Uploaded Image"):
-            st.image(cv2.cvtColor(image_for_display, cv2.COLOR_BGR2RGB), caption="Original Low-Resolution Image", use_column_width=True)
+            st.image(cv2.cvtColor(image_for_display, cv2.COLOR_BGR2RGB), caption="Original Low-Resolution Image", use_container_width=True)
         
         # Define output folder and checkpoint directory.
         output_folder = "data/processed"
         checkpoint_dir = os.path.join(output_folder, "checkpoint")
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
-        if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
+        os.makedirs(output_folder, exist_ok=True)
+        os.makedirs(checkpoint_dir, exist_ok=True)
         
-        if st.button("Enhance Image"):
-            # Start genetic algorithm in a separate thread.
+        # Clear any previous checkpoints to avoid mixing runs.
+        clear_checkpoint_directory(checkpoint_dir)
+        
+        if st.button("Reconstruct"):
+            # Run genetic algorithm in a separate thread.
             ga_thread = threading.Thread(target=run_genetic_algorithm, args=(tfile.name, output_folder))
             ga_thread.start()
             
-            # Display a loading spinner and progress area.
             progress_placeholder = st.empty()
             checkpoint_placeholder = st.empty()
-            
             st.info("Processing image. Please wait while checkpoints are generated...")
-            # Poll the checkpoint folder periodically until the genetic algorithm thread finishes.
+            
+            # Poll the checkpoint folder periodically.
             while ga_thread.is_alive():
-                # Get the current list of checkpoint images.
                 checkpoints = load_checkpoint_images(checkpoint_dir)
                 if checkpoints:
-                    # Display the latest checkpoint image.
                     latest_checkpoint = checkpoints[-1]
-                    checkpoint_placeholder.image(Image.open(latest_checkpoint), caption=f"Checkpoint: {os.path.basename(latest_checkpoint)}", use_column_width=True)
-                # Update a progress message (you could also use st.progress if you have an estimated total)
+                    checkpoint_placeholder.image(
+                        Image.open(latest_checkpoint),
+                        width=150,
+                        caption=f"Latest Checkpoint: {os.path.basename(latest_checkpoint)}",
+                        use_container_width=False
+                    )
                 progress_placeholder.text("Processing... (checkpoints will update as they are generated)")
                 time.sleep(2)
             
             ga_thread.join()
             progress_placeholder.text("Processing complete!")
             
-            # Display the final generated image.
             final_image_path = os.path.join(output_folder, "solution.png")
             st.success("Genetic algorithm finished. Final image:")
-            st.image(Image.open(final_image_path), caption="Final Generated Image", use_column_width=True)
+            st.image(Image.open(final_image_path), use_container_width=True, caption="Final Generated Image")
             
-            # Optionally, display a gallery of all checkpoints.
+            # --- Display Checkpoint Gallery in a 3-Column Grid ---
             st.markdown("### Checkpoint Gallery")
             checkpoint_files = load_checkpoint_images(checkpoint_dir)
             if checkpoint_files:
-                cols = st.columns(3)
-                for i, cp in enumerate(checkpoint_files):
-                    with cols[i % 3]:
-                        st.image(Image.open(cp), caption=os.path.basename(cp), use_column_width=True)
-            
-    # Clean up temporary file.
+                # Display images in rows of 3.
+                for i in range(0, len(checkpoint_files), 3):
+                    cols = st.columns(3)
+                    for j, cp in enumerate(checkpoint_files[i:i+3]):
+                        with cols[j]:
+                            st.image(
+                                Image.open(cp),
+                                width=150,
+                                caption=os.path.basename(cp),
+                                use_container_width=False
+                            )
+    
     os.remove(tfile.name)
