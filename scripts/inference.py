@@ -19,6 +19,7 @@ if project_root not in sys.path:
 import image_parameters  # noqa: E402
 from model import genetic_model  # noqa: E402
 
+
 def clear_checkpoint_directory(checkpoint_dir):
     """
     Remove all files from the checkpoint directory.
@@ -26,6 +27,7 @@ def clear_checkpoint_directory(checkpoint_dir):
     if os.path.exists(checkpoint_dir):
         shutil.rmtree(checkpoint_dir)
     os.makedirs(checkpoint_dir, exist_ok=True)
+
 
 def display_side_by_side(original_path, final_path):
     """
@@ -58,6 +60,7 @@ def display_side_by_side(original_path, final_path):
     plt.tight_layout()
     plt.show()
 
+
 def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", display=True):
     """
     Run the genetic algorithm to regenerate an image, save the final output,
@@ -82,10 +85,9 @@ def inference(image_path="data/raw/fruit.jpg", output_folder="data/processed", d
     parameters_list = image_parameters.Main(image_path)
     # Run the genetic algorithm.
     genetic_model.genetic_algorithm(parameters_list, output_folder)
+    
     # Define the final image path.
     final_image_path = os.path.join(output_folder, "solution.png")
-    
-    # Display final image.
     if display:
         display_side_by_side(image_path, final_image_path)
 
