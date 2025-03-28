@@ -12,3 +12,5 @@ __pycache__/
 # Python virtual environments
 venv/
 env/
+
+data/processed
