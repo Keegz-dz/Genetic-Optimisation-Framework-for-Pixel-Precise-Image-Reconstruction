@@ -3,7 +3,7 @@ This module is responsible for processing an input image file and extracting key
 required for the genetic algorithm. It reads the image, converts it into a NumPy array, and
 generates essential data including the original image (as a PIL Image), the array representation,
 the shape of the image, and the flattened array (chromosome) that represents the image.
-It also resizes every input image to 300x300 pixels to speed up the genetic algorithm.
+It also resizes every input image to speed up the genetic algorithm.
 """
 
 import numpy as np
