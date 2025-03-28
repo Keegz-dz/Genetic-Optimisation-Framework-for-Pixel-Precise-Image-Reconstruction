@@ -65,14 +65,6 @@ For running inference using the Streamlit UI, the following data files and direc
 
 ## Technology Stack
 
-- **Programming Language:** Python
-- **Frameworks/Libraries:** 
-  - Streamlit (for interactive UI)
-  - OpenCV & PIL (for image processing)
-  - NumPy (for numerical computations)
-  - Matplotlib (for saving images)
-- **Containerization:** Docker (for easy deployment)
-
 ![Data Workflow](assets/data-workflow.png)
 
 
