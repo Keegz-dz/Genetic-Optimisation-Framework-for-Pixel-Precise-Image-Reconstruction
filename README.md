@@ -102,5 +102,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For further reading on genetic algorithms, see:
 - Goldberg, D. E. Genetic Algorithms in Search, Optimization, and Machine Learning.
 
----
 
+## Repository Move Notice
+>
+> This repository hosts the current, active development of the project and captures all the latest updates. It was migrated from a private repository to streamline organization and improve long-term maintainability.
