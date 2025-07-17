@@ -62,6 +62,6 @@ dependencies:
       - tqdm==4.67.1
       - typing-extensions==4.13.0
       - tzdata==2025.2
-      - urllib3==2.3.0
+      - urllib3==2.5.0
       - watchdog==6.0.0
 prefix: /opt/homebrew/Caskroom/miniforge/base/envs/genetic-ir
