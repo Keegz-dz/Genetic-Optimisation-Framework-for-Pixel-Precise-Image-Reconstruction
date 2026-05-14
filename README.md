@@ -185,7 +185,6 @@ mutated, preserving elitist solutions across generations.
 
 - Python 3.10
 - 4 GB RAM (8 GB recommended for longer runs)
-- Docker and Docker Compose (if using the Docker path)
 - At least 1 GB of free disk space (for generated outputs and checkpoint images)
 
 ### Quick start
@@ -242,8 +241,6 @@ Genetic-Optimisation-Framework-for-Pixel-Precise-Image-Reconstruction/
 ├── assets/                    # Images used in README
 │
 ├── streamlit_main.py          # Browser-based inference UI
-├── DockerFile                 
-├── docker-compose.yaml        # Single-service Compose configuration for the Streamlit app
 ├── requirements.txt           
 └── environment.yml            
 ```
