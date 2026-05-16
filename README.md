@@ -355,7 +355,7 @@ This project is released under the MIT Licence. See [`LICENSE`](LICENSE) for ful
 Maintained by [Keegan Dsouza](https://github.com/Keegz-dz). For bug reports and feature requests, please open an issue on the [issue tracker](https://github.com/Keegz-dz/Genetic-Optimisation-Framework-for-Pixel-Precise-Image-Reconstruction/issues).
 
 <p align="left">
-  <a href="https://www.linkedin.com/in/keegan-dsouza-4019162b9/">
+  <a href="https://www.linkedin.com/in/keegan-dz/">
     <img src="https://img.shields.io/badge/Keegan-LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" />
   </a>
   <a href="mailto:keegz29.dz@gmail.com">
